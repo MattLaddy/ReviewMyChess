@@ -80,17 +80,24 @@ const ChessEvaluator = () => {
         <div className="games-list">
           {games.map((game, index) => (
             <div key={index} className="game-card">
-              <h2>Game {index + 1}</h2>
-              <p><strong>White:</strong> {game.game.white.username}</p>
-              <p><strong>White Rating:</strong> {game.game.white.rating}</p>
-              <p><strong>Black:</strong> {game.game.black.username}</p>
-              <p><strong>Black Rating:</strong> {game.game.black.rating}</p>
-              <button
-                onClick={() => setCurrentGame(game)}
-                className="show-game-button"
-              >
-                Show Game
-              </button>
+              <div className="game-info">
+                <div className="player-info">
+                  <p><strong>White:</strong> {game.game.white.username}   <strong>White Rating:</strong> {game.game.white.rating}</p>
+                  
+                  <p><strong>Black:</strong> {game.game.black.username}   <strong>Black Rating:</strong> {game.game.black.rating} 
+                  
+                  <button
+                  onClick={() => setCurrentGame(game)}
+                  className="show-game-button"
+                >
+                  Show Game
+                </button>
+                  
+                  </p> 
+
+                </div>
+                
+              </div>
             </div>
           ))}
         </div>

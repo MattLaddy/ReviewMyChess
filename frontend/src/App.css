@@ -13,7 +13,7 @@ body {
 
 h1 {
   color: #333;
-  margin-bottom:   20px;
+  margin-bottom: 20px;
 }
 
 /* Input and Button Styles */
@@ -122,11 +122,15 @@ button:hover {
   border: 1px solid #d2b48c; /* Slightly darker brown border */
   padding: 10px;
   border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .game-card h2 {
   margin: 0;
   font-size: 1.2em;
+  flex-grow: 1; /* Allows the h2 to take up available space */
 }
 
 .game-card p {
@@ -136,10 +140,11 @@ button:hover {
 .show-game-button {
   background-color: #d2b48c;
   border: none;
-  padding: 5px 10px;
+  padding: 5px 30px;
   color: white;
   border-radius: 5px;
   cursor: pointer;
+  margin-right: auto;
 }
 
 .show-game-button:hover {

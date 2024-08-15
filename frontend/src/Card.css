@@ -1,55 +1,156 @@
-/* Card.css */
-.card {
-    background-color: #f5f5dc; /* Light brown background */
-    border: 1px solid #d3bda4;
-    border-radius: 8px;
-    padding: 16px;
-    margin: 16px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    cursor: pointer;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  }
-  
-  .card:hover {
-    background-color: #e0d5c5; /* Slightly darker brown on hvdvsdvdfsvsasdover */
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-  }
-  
-  .card-header {
-    margin-bottom: 16px;
-  }
-  
-  .card-header h2 {
-    font-family: 'Arial', sans-serif;
-    color: #5a3f1b;
-  }
-  
-  .card-body {
-    font-family: 'Georgia', serif;
-    color: #3c2b1f;
-  }
-  
-  .game-info, .player-info, .pgn-info {
-    margin-bottom: 16px;
-  }
-  
-  .game-info p, .player-info p, .pgn-info pre {
-    margin: 4px 0;
-  }
-  
-  .player-info {
-    display: flex;
-    justify-content: space-between;
-  }
-  
-  .player {
-    width: 48%;
-  }
-  
-  .pgn-info pre {
-    background-color: #eaeaea;
-    padding: 8px;
-    border-radius: 4px;
-    overflow: auto;
-  }
-  
+/* General Styles */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
+}
+
+.App {
+  text-align: center;
+  margin: 20px;
+}
+
+h1 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Input and Button Styles */
+input[type="text"] {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-right: 10px;
+  width: 200px;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+/* Game List Styles */
+.game-list {
+  margin-top: 20px;
+}
+
+.game-item {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 10px;
+  background-color: #fff;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.game-item h2 {
+  margin: 0 0 10px;
+  color: #333;
+}
+
+.game-item button {
+  background-color: #28a745;
+}
+
+.game-item button:hover {
+  background-color: #218838;
+}
+
+/* Board Styles */
+#board {
+  margin: 20px auto;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#moves {
+  margin-top: 20px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#moves h3 {
+  margin: 0 0 10px;
+  color: #333;
+}
+
+#moves ul {
+  list-style: none;
+  padding: 0;
+}
+
+#moves li {
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
+}
+
+#moves li:last-child {
+  border-bottom: none;
+}
+
+.chess-evaluator {
+  font-family: Arial, sans-serif;
+}
+
+.username-input, .submit-button {
+  margin-bottom: 10px;
+}
+
+.games-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.game-card {
+  background-color: #f5f5dc; /* Light brown background */
+  border: 1px solid #d2b48c; /* Slightly darker brown border */
+  padding: 10px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.game-info {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.player-info {
+  flex-grow: 1; /* Takes up available space */
+}
+
+.show-game-button {
+  background-color: #d2b48c;
+  border: none;
+  padding: 5px 30px;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: auto; /* Pushes the button to the right */
+}
+
+.show-game-button:hover {
+  background-color: #a0522d; /* Darker brown on hover */
+}
+
+.current-game {
+  margin-top: 20px;
+}
