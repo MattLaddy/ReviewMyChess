@@ -1,0 +1,55 @@
+/* Card.css */
+.card {
+    background-color: #f5f5dc; /* Light brown background */
+    border: 1px solid #d3bda4;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 16px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .card:hover {
+    background-color: #e0d5c5; /* Slightly darker brown on hvdvsdvdfsvsasdover */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  }
+  
+  .card-header {
+    margin-bottom: 16px;
+  }
+  
+  .card-header h2 {
+    font-family: 'Arial', sans-serif;
+    color: #5a3f1b;
+  }
+  
+  .card-body {
+    font-family: 'Georgia', serif;
+    color: #3c2b1f;
+  }
+  
+  .game-info, .player-info, .pgn-info {
+    margin-bottom: 16px;
+  }
+  
+  .game-info p, .player-info p, .pgn-info pre {
+    margin: 4px 0;
+  }
+  
+  .player-info {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .player {
+    width: 48%;
+  }
+  
+  .pgn-info pre {
+    background-color: #eaeaea;
+    padding: 8px;
+    border-radius: 4px;
+    overflow: auto;
+  }
+  
