@@ -1,0 +1,73 @@
+/* General styling for the game details page */
+.game-details {
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+}
+
+/* Back button styling */
+.back-button {
+    margin-bottom: 20px;
+    padding: 10px 20px;
+    font-size: 1em;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.back-button:hover {
+    background-color: #0056b3;
+}
+
+/* Header styling */
+.game-details h1 {
+    font-size: 2em;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Sub-header styling */
+.game-details h2 {
+    font-size: 1.5em;
+    margin-top: 20px;
+    color: #555;
+}
+
+/* Game info styling */
+
+
+.game-info p {
+    margin: 10px 0;
+    font-size: 1.1em;
+}
+
+.game-info p strong {
+    color: #333;
+}
+
+/* List styling for evaluations */
+.game-info ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.game-info li {
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+    font-size: 1.1em;
+}
+
+.game-info li:last-child {
+    border-bottom: none;
+}
+
+/* Styling for when no game data is available */
+.game-details p {
+    font-size: 1.2em;
+    color: #888;
+}

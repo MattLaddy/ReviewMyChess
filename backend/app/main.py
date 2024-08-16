@@ -3,8 +3,8 @@ import httpx
 import chess.pgn
 import io
 import chess
-import requests
 import logging
+import os
 from fastapi.middleware.cors import CORSMiddleware
 from stockfish import Stockfish
 
@@ -22,24 +22,49 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-STOCKFISH_API_URL = "https://stockfish.online/api/s/v2.php"
+# Path to your Stockfish executable (use environment variable for portability)
+STOCKFISH_PATH = os.getenv('STOCKFISH_PATH', "../stockfish/stockfish-macos-m1-apple-silicon")
+stockfish = Stockfish(path=STOCKFISH_PATH)
 
 def evaluate_position(fen: str, depth: int):
-    logger.info(f"Evaluating position with FEN: {fen} and depth: {depth}")
-    params = {
-        "fen": fen,
-        "depth": depth
-    }
-    try:
-        response = requests.get(STOCKFISH_API_URL, params=params)
-        response.raise_for_status()  # Raise an HTTPError for bad responses
-        return response.json()
-    except requests.RequestException as e:
-        logger.error(f"Error communicating with Stockfish API: {e}")
-        return None
+    logger.debug(f"Evaluating position with FEN: {fen} and depth: {depth}")
+    stockfish.set_fen_position(fen)
+    stockfish.set_depth(depth)
+    result = stockfish.get_best_move()
 
+    if result:
+        evaluation = stockfish.get_evaluation()
+        logger.debug(f"Evaluation result: {evaluation}")
 
-def parse_pgn_and_evaluate(pgn_text: str, depth: int):
+        if isinstance(evaluation, dict):
+            # Extract the value from the dictionary
+            current_evaluation = evaluation.get('value', 0.0)
+        else:
+            # Handle case where evaluation is not a dictionary
+            current_evaluation = evaluation
+        
+        return {
+            "success": True,
+            "evaluation": float(current_evaluation)  # Ensure it's a float
+        }
+    else:
+        logger.error("Evaluation failed or no result returned")
+        return {
+            "success": False,
+            "evaluation": 0.0
+        }
+
+def classify_move(swing: float) -> str:
+    if swing <= -2.0:
+        return "blunder"
+    elif -2.0 < swing < -0.5:
+        return "inaccuracy"
+    elif swing >= 2.0:
+        return "missed_win"
+    else:
+        return "normal"
+
+def parse_pgn_and_evaluate(pgn_text: str, user_name: str, depth: int):
     logger.info("Parsing PGN and evaluating")
     evaluations = []
     previous_evaluation = 0.0
@@ -47,6 +72,9 @@ def parse_pgn_and_evaluate(pgn_text: str, depth: int):
     try:
         pgn = chess.pgn.read_game(io.StringIO(pgn_text))
         board = chess.Board()
+        game_data = pgn.headers
+        white_player = game_data.get("White", "").strip().lower()
+        black_player = game_data.get("Black", "").strip().lower()
 
         for move in pgn.mainline_moves():
             board.push(move)
@@ -55,15 +83,20 @@ def parse_pgn_and_evaluate(pgn_text: str, depth: int):
             
             if evaluation and evaluation.get("success"):
                 current_evaluation = evaluation.get("evaluation", 0.0)
+                swing = current_evaluation - previous_evaluation
 
-                if abs(current_evaluation - previous_evaluation) >= 1.0:
-                    evaluations.append({
-                        "fen": fen,
-                        "move": move.uci(),
-                        "previous_evaluation": previous_evaluation,
-                        "current_evaluation": current_evaluation,
-                        "swing": current_evaluation - previous_evaluation
-                    })
+                if abs(swing) >= 1.0:
+                    # Determine if the move was made by the user
+                    move_player = white_player if board.turn == chess.WHITE else black_player
+                    if move_player == user_name.strip().lower():
+                        evaluations.append({
+                            "fen": fen,
+                            "move": move.uci(),
+                            "previous_evaluation": previous_evaluation,
+                            "current_evaluation": current_evaluation,
+                            "swing": swing,
+                            "classification": classify_move(swing)
+                        })
 
                 previous_evaluation = current_evaluation
             else:
@@ -74,9 +107,6 @@ def parse_pgn_and_evaluate(pgn_text: str, depth: int):
         logger.error(f"Unexpected error during PGN parsing or evaluation: {e}")
 
     return evaluations
-
-
-
 
 @app.get("/games/{username}")
 async def get_games(username: str):
@@ -105,14 +135,14 @@ async def get_games(username: str):
                 games = games_data.get("games", [])
                 all_games.extend(games)
             
-            last_10_games = all_games[:5]
+            last_10_games = all_games[:10]
             logger.info(f"Retrieved {len(last_10_games)} games")
 
             evaluations = []
             for game in last_10_games:
                 pgn_text = game.get("pgn", "")
                 depth = 10
-                game_evaluations = parse_pgn_and_evaluate(pgn_text, depth)
+                game_evaluations = parse_pgn_and_evaluate(pgn_text, username, depth)
                 evaluations.append({
                     "game": game,
                     "evaluations": game_evaluations
