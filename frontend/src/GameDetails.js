@@ -26,17 +26,18 @@ const GameDetails = () => {
         <div className="game-details">
             <button onClick={handleBackClick} className="back-button">Back</button>
             <h1>Game Details</h1>
-            <div className="game-info">
-                <p><strong>White:</strong> {storedGame.game.white.username} <strong>White Rating:</strong> {storedGame.game.white.rating}</p>
-                <p><strong>Black:</strong> {storedGame.game.black.username} <strong>Black Rating:</strong> {storedGame.game.black.rating}</p>
-                <h2>Evaluations</h2>
-                <ul>
-                    {storedGame.evaluations.map((evaluation, index) => (
-                        <li key={index}>
-                            Move: {evaluation.move}, Swing: {evaluation.swing}
-                        </li>
-                    ))}
-                </ul>
+            <div className="game-card">
+                <div className="game-info">
+                    <div className="player-info">
+                    </div>
+                    <ul className="game-evaluations">
+                        {storedGame.evaluations.map((evaluation, index) => (
+                            <li key={index}>
+                                Move: {evaluation.move}, Swing: {evaluation.swing}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
             </div>
         </div>
     );
