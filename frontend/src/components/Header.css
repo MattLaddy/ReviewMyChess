@@ -1,11 +1,15 @@
 .header {
-    background-color: #343a40;
-    color: #ffffff;
-    padding: 1rem;
-    text-align: center;
+    background-color: #343a40; /* Dark background for contrast */
+    color: #ffffff; /* Light text color for readability */
+    padding: 10px 20px; /* Smaller padding for a more compact look */
+    text-align: left; /* Align text to the left */
+    border-bottom: 1px solid #495057; /* Subtle border for separation */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* Softer shadow for a lighter look */
+    font-family: 'Helvetica Neue', Arial, sans-serif; /* Modern, clean font */
 }
 
 .header h1 {
     margin: 0;
-    font-size: 2rem;
+    font-size: 1.5rem; /* Smaller font size for a less prominent header */
+    font-weight: 700; /* Bold font weight for emphasis */
 }

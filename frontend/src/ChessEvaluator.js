@@ -3,7 +3,6 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import ChessBoard from 'chessboardjs';
 import { Chess } from 'chess.js';
-import './styles/ChessEvaluator.css'; // Import the CSS file
 
 const ChessEvaluator = () => {
     const [games, setGames] = useState([]);
@@ -13,7 +12,6 @@ const ChessEvaluator = () => {
     const boardRef = useRef(null);
     const [swingPoints, setSwingPoints] = useState([]);
 
-    // Restore state from localStorage on mount
     useEffect(() => {
         const storedUsername = localStorage.getItem('username') || '';
         const storedGames = JSON.parse(localStorage.getItem('games')) || [];
@@ -29,7 +27,6 @@ const ChessEvaluator = () => {
         }
     }, []);
 
-    // Save state to localStorage when it changes
     useEffect(() => {
         localStorage.setItem('username', username);
         localStorage.setItem('games', JSON.stringify(games));
@@ -49,20 +46,14 @@ const ChessEvaluator = () => {
         };
     }, [currentGame]);
 
-    const formatDate = (timestamp) => {
-        const date = new Date(timestamp * 1000); // Convert to milliseconds
-        return date.toLocaleString(); // Adjust the format as needed
-    };
-
     const fetchGames = async () => {
         try {
             const response = await axios.get(`http://localhost:8000/games/${username}`);
-            console.log(response.data); // Log the response data to check the structure
             const fetchedGames = response.data.evaluations.map(game => ({
                 ...game,
                 date: game.date
             }));
-    
+
             setGames(fetchedGames);
             localStorage.setItem('games', JSON.stringify(fetchedGames));
         } catch (error) {
@@ -107,6 +98,12 @@ const ChessEvaluator = () => {
 
         setChess(new Chess(chess.fen())); // Use a new Chess instance
         setupBoard();
+    };
+
+    const formatDate = (timestamp) => {
+        if (!timestamp) return 'Unknown Date';
+        const date = new Date(timestamp * 1000);
+        return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
     };
 
     return (
