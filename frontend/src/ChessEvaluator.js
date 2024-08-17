@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import ChessBoard from 'chessboardjs';
 import { Chess } from 'chess.js';
 
@@ -10,6 +10,7 @@ const ChessEvaluator = () => {
     const [currentGame, setCurrentGame] = useState(null);
     const [chess, setChess] = useState(new Chess());
     const boardRef = useRef(null);
+    const location = useLocation();
     const [swingPoints, setSwingPoints] = useState([]);
 
     useEffect(() => {
@@ -25,7 +26,7 @@ const ChessEvaluator = () => {
             setChess(new Chess(storedCurrentGame.fen));
             highlightMistakes();
         }
-    }, []);
+    }, [location]); // Re-run the effect when location changes
 
     useEffect(() => {
         localStorage.setItem('username', username);
