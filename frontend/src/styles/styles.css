@@ -1,97 +1,84 @@
-/* General styling for the game details page */
-.game-details {
-    padding: 20px;
-    max-width: 800px;
-    margin: 0 auto;
+body, html {
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* Prevent scrolling */
+    height: 100%;
     font-family: Arial, sans-serif;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-/* Back button styling */
+.game-details-container {
+    display: flex;
+    height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
 .back-button {
+    align-self: flex-start;
     margin-bottom: 20px;
-    padding: 12px 24px;
-    font-size: 1em;
-    color: #fff;
-    background-color: #007bff;
+    padding: 10px 15px;
     border: none;
+    background-color: #007bff;
+    color: white;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .back-button:hover {
     background-color: #0056b3;
-    transform: scale(1.05);
 }
 
-/* Header styling */
-.game-details h1 {
-    font-size: 2.5em;
-    margin-bottom: 20px;
-    color: #333;
-    font-weight: bold;
-}
-
-/* Game card container */
-.game-card {
-    background-color: #f5f5f5;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 15px;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 20px;
-}
-
-/* Player info styling */
-.player-info {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    align-items: center;
-}
-
-/* Player styling */
-.player {
+.game-content {
     display: flex;
-    align-items: center;
-    gap: 10px;
+    width: 100%;
+    height: calc(100% - 40px); /* Adjust height to accommodate the back button */
 }
 
-/* Player square styling */
-.player-square {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
+.moves-container {
+    width: 300px; /* Width of the moves list container */
+    padding-right: 20px;
+    display: flex;
+    flex-direction: column;
 }
 
-/* White player circle */
-.player-white {
-    background-color: #fff;
-    border: 1px solid #ddd;
+.moves-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
 }
 
-/* Black player circle */
-.player-black {
-    background-color: #000;
-}
-
-/* List styling for evaluations */
 .game-evaluations {
     list-style-type: none;
     padding: 0;
     margin: 0;
+    height: 450px; /* Adjust height to fit exactly 9 items, assuming each item is around 50px tall */
+    overflow-y: auto; /* Make the list scrollable */
+    box-sizing: border-box; /* Include padding and border in height calculation */
 }
 
 .game-evaluations li {
-    padding: 8px;
-    border-bottom: 1px solid #ddd;
-    font-size: 1.1em;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #f1f1f1;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    box-sizing: border-box; /* Ensure padding and margin are included in the height calculation */
 }
 
-.game-evaluations li:last-child {
-    border-bottom: none;
+.game-evaluations li:hover {
+    background-color: #e0e0e0;
+}
+
+.chessboard-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    max-width: 400px; /* Maximum width for the chessboard container */
+    max-height: 400px; /* Maximum height for the chessboard container */
+}
+
+#BasicBoard {
+    width: 200px; /* Width of the chessboard */
+    height: 200px; /* Height of the chessboard */
 }

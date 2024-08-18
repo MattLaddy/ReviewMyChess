@@ -1,15 +1,18 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './styles/styles.css';
+import { Chessboard } from "react-chessboard";
 
 const GameDetails = () => {
     const location = useLocation();
     const navigate = useNavigate();
+    const [currentFen, setCurrentFen] = useState(''); // State to store the current FEN string
     const { game } = location.state || {}; // Retrieve game data from state
 
     useEffect(() => {
         if (game) {
             localStorage.setItem('gameDetails', JSON.stringify(game));
+            setCurrentFen(game.startingFen); // Set the initial FEN from the game object
         }
     }, [game]);
 
@@ -22,21 +25,36 @@ const GameDetails = () => {
 
     if (!storedGame) return <p>No game data available</p>;
 
+    // Handle the click on a move to update the chessboard with the corresponding FEN
+    const handleMoveClick = (fen) => {
+        setCurrentFen(fen);
+    };
+
+    const onDrop = (sourceSquare, targetSquare) => {
+        // Handle piece drop logic if needed
+    };
+
     return (
-        <div className="game-details">
+        <div className="game-details-container">
             <button onClick={handleBackClick} className="back-button">Back</button>
-            <h1>Game Details</h1>
-            <div className="game-card">
-                <div className="game-info">
-                    <div className="player-info">
-                    </div>
+            <div className="game-content">
+                <div className="moves-container">
+                    <h2>Moves</h2>
                     <ul className="game-evaluations">
                         {storedGame.evaluations.map((evaluation, index) => (
-                            <li key={index}>
-                                Move: {evaluation.move}, Swing: {evaluation.swing}
+                            <li key={index} onClick={() => handleMoveClick(evaluation.fen)}>
+                                Move {index + 1}: {evaluation.move}
                             </li>
                         ))}
                     </ul>
+                </div>
+                <div className="chessboard-container">
+                    <Chessboard
+                        id="BasicBoard"
+                        position={currentFen}
+                        onPieceDrop={onDrop}
+                        boardOrientation="white"
+                    />
                 </div>
             </div>
         </div>

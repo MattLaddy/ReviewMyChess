@@ -135,7 +135,7 @@ async def get_games(username: str):
                 games = games_data.get("games", [])
                 all_games.extend(games)
             
-            last_10_games = all_games[:10]
+            last_10_games = all_games[-10:]
             logger.info(f"Retrieved {len(last_10_games)} games")
 
             evaluations = []
