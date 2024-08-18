@@ -82,3 +82,21 @@ body, html {
     width: 200px; /* Width of the chessboard */
     height: 200px; /* Height of the chessboard */
 }
+
+.loading-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Ensure it appears above other content */
+}
+
+.loading-screen p {
+    font-size: 1.5rem;
+    color: #333;
+}

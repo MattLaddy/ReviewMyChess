@@ -78,35 +78,37 @@ def parse_pgn_and_evaluate(pgn_text: str, user_name: str, depth: int):
 
         for move in pgn.mainline_moves():
             board.push(move)
-            fen = board.fen()
+            fen = board.fen()  # Get the FEN string after each move
+            
+            # Evaluate the position
             evaluation = evaluate_position(fen, depth)
             
             if evaluation and evaluation.get("success"):
                 current_evaluation = evaluation.get("evaluation", 0.0)
                 swing = current_evaluation - previous_evaluation
 
-                if abs(swing) >= 1.0:
-                    # Determine if the move was made by the user
-                    move_player = white_player if board.turn == chess.WHITE else black_player
-                    if move_player == user_name.strip().lower():
-                        evaluations.append({
-                            "fen": fen,
-                            "move": move.uci(),
-                            "previous_evaluation": previous_evaluation,
-                            "current_evaluation": current_evaluation,
-                            "swing": swing,
-                            "classification": classify_move(swing)
-                        })
+                # Determine if the move was made by the user
+                move_player = white_player if board.turn == chess.WHITE else black_player
+                if move_player == user_name.strip().lower():
+                    evaluations.append({
+                        "fen": fen,
+                        "move": move.uci(),
+                        "previous_evaluation": previous_evaluation,
+                        "current_evaluation": current_evaluation,
+                        "swing": swing,
+                        "classification": classify_move(swing)
+                    })
 
+                # Update previous_evaluation for the next move
                 previous_evaluation = current_evaluation
-            else:
-                logger.error(f"Evaluation failed for FEN: {fen}")
+
     except ValueError as e:
         logger.error(f"ValueError during PGN parsing or evaluation: {e}")
     except Exception as e:
         logger.error(f"Unexpected error during PGN parsing or evaluation: {e}")
 
     return evaluations
+
 
 @app.get("/games/{username}")
 async def get_games(username: str):
