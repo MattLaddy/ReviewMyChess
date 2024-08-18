@@ -53,58 +53,42 @@ def evaluate_position(fen: str, depth: int):
             "success": False,
             "evaluation": 0.0
         }
-    
-
 
 def classify_move(swing: float, color: str) -> str:
-    """
-    Classify a move based on its swing value considering the color of the player.
-
-    Parameters:
-        swing (float): The swing value of the move.
-        color (str): The color of the player ('white' or 'black').
-
-    Returns:
-        str: The classification of the move.
-    """
     if color == 'black':
-        # For Black pieces, a negative swing is good, so invert the thresholds
         if swing <= -3.0:
-            return "blunder"           # Major mistake; significant disadvantage
+            return "blunder"
         elif -3.0 < swing <= -1.5:
-            return "mistake"           # Significant error; worse position but not losing material
+            return "mistake"
         elif -1.5 < swing <= -0.5:
-            return "inaccuracy"        # Minor error; suboptimal move
+            return "inaccuracy"
         elif 0.5 <= swing < 1.5:
-            return "slightly_accurate" # Small advantage; better position
+            return "slightly_accurate"
         elif 1.5 <= swing < 3.0:
-            return "strong_move"       # Strong move; significantly improves position
+            return "strong_move"
         elif swing >= 3.0:
-            return "brilliant"         # Exceptional move; creates a winning advantage
+            return "brilliant"
         elif swing >= -0.5 and swing <= 0.5:
-            return "normal"            # Neutral move; no significant impact
+            return "normal"
         else:
-            return "unclassified"      # For swings outside the defined range
+            return "unclassified"
     else:
-        # For White pieces, a positive swing is good, so use the original thresholds
         if swing >= 3.0:
-            return "brilliant"         # Exceptional move; creates a winning advantage
+            return "brilliant"
         elif 1.5 <= swing < 3.0:
-            return "strong_move"       # Strong move; significantly improves position
+            return "strong_move"
         elif 0.5 <= swing < 1.5:
-            return "slightly_accurate" # Small advantage; better position
+            return "slightly_accurate"
         elif -0.5 < swing <= 0.5:
-            return "normal"            # Neutral move; no significant impact
+            return "normal"
         elif -1.5 < swing <= -0.5:
-            return "inaccuracy"        # Minor error; suboptimal move
+            return "inaccuracy"
         elif -3.0 < swing <= -1.5:
-            return "mistake"           # Significant error; worse position but not losing material
+            return "mistake"
         elif swing <= -3.0:
-            return "blunder"           # Major mistake; significant disadvantage
+            return "blunder"
         else:
-            return "unclassified"      # For swings outside the defined range
-
-        return "unclassified"      # For swings outside the defined range or unexpected values
+            return "unclassified"
 
 def parse_pgn_and_evaluate(pgn_text: str, user_name: str, depth: int):
     logger.info("Parsing PGN and evaluating")
@@ -120,16 +104,13 @@ def parse_pgn_and_evaluate(pgn_text: str, user_name: str, depth: int):
 
         for move in pgn.mainline_moves():
             board.push(move)
-            fen = board.fen()  # Get the FEN string after each move
-            
-            # Evaluate the position
+            fen = board.fen()
             evaluation = evaluate_position(fen, depth)
             
             if evaluation and evaluation.get("success"):
                 current_evaluation = evaluation.get("evaluation", 0.0)
                 swing = current_evaluation - previous_evaluation
 
-                # Determine if the move was made by the user and classify the move
                 move_player = white_player if board.turn == chess.WHITE else black_player
                 color = 'white' if board.turn == chess.WHITE else 'black'
                 
@@ -140,10 +121,9 @@ def parse_pgn_and_evaluate(pgn_text: str, user_name: str, depth: int):
                         "previous_evaluation": previous_evaluation,
                         "current_evaluation": current_evaluation,
                         "swing": swing,
-                        "classification": classify_move(swing, color)  # Pass the color for classification
+                        "classification": classify_move(swing, color)
                     })
 
-                # Update previous_evaluation for the next move
                 previous_evaluation = current_evaluation
 
     except ValueError as e:
@@ -168,23 +148,23 @@ async def get_games(username: str):
                 raise HTTPException(status_code=404, detail="No archives found for the user")
             
             archive_urls = data["archives"]
-            all_games = []
+            latest_games = []
 
             for archive_url in reversed(archive_urls):
-                if len(all_games) >= 10:
-                    break
-                
                 games_response = await client.get(archive_url)
                 games_response.raise_for_status()
                 games_data = games_response.json()
                 games = games_data.get("games", [])
-                all_games.extend(games)
+                latest_games.extend(games)
+                
+                if len(latest_games) >= 10:
+                    break
             
-            last_10_games = all_games[-10:]
-            logger.info(f"Retrieved {len(last_10_games)} games")
+            latest_games = latest_games[:10]
+            logger.info(f"Retrieved {len(latest_games)} games")
 
             evaluations = []
-            for game in last_10_games:
+            for game in latest_games:
                 pgn_text = game.get("pgn", "")
                 depth = 10
                 game_evaluations = parse_pgn_and_evaluate(pgn_text, username, depth)

@@ -121,12 +121,24 @@ const ChessEvaluator = () => {
     const formatDate = (timestamp) => {
         if (!timestamp) return 'Unknown Date';
         const date = new Date(timestamp * 1000);
-        return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+        return date.toLocaleDateString();
     };
+
+    const convertTimeControlToMinutes = (timeControl) => {
+        const seconds = parseInt(timeControl, 10);
+        if (isNaN(seconds)) {
+            throw new Error('Invalid time control value');
+        }
+        
+        const minutes = Math.floor(seconds / 60);
+        const remainingSeconds = seconds % 60;
+    
+        return `${minutes} min`;
+    };
+    
 
     return (
         <div className="chess-evaluator">
-            <h1>Chess Game Evaluations</h1>
             <input
                 type="text"
                 value={username}
@@ -134,7 +146,10 @@ const ChessEvaluator = () => {
                 placeholder="Enter Chess Username"
                 className="username-input"
             />
-            <button onClick={fetchGames} className="submit-button">Submit</button>
+            <button onClick={fetchGames} className="submit-button">Search</button>
+        
+        
+        
 
             {/* Conditional rendering for loading and data */}
             {loading ? (
@@ -143,6 +158,12 @@ const ChessEvaluator = () => {
                 </div>
             ) : (
                 <>
+                <div className="top">
+                    <div className="tops">White</div>
+                    <div className="tops">Black</div>
+                    <div className="tops">Date</div>
+                    <div className="tops">Control</div>
+                </div>
                     {games.length > 0 && (
                         <div className="games-list">
                             {games.map((game, index) => (
@@ -156,7 +177,8 @@ const ChessEvaluator = () => {
                                             <div className="player-square player-black"></div>
                                             <p>{game.game.black.username} <strong> - </strong> {game.game.black.rating}</p>
                                         </div>
-                                        <p><strong>Date:</strong> {formatDate(game.game.end_time)}</p>
+                                        <p>{formatDate(game.game.end_time)}</p>
+                                        <p>{game.game.time_class} {convertTimeControlToMinutes(game.game.time_control)}</p>
                                         <Link to={`/game/${game.id}`} state={{ game }} className="show-game-button">Show Game</Link>
                                     </div>
                                 </div>

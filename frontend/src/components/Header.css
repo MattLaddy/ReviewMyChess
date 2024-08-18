@@ -1,15 +1,19 @@
+/* Header.css */
+
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
+
 .header {
-    background-color: #343a40; /* Dark background for contrast */
-    color: #ffffff; /* Light text color for readability */
-    padding: 10px 20px; /* Smaller padding for a more compact look */
-    text-align: left; /* Align text to the left */
-    border-bottom: 1px solid #495057; /* Subtle border for separation */
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* Softer shadow for a lighter look */
-    font-family: 'Helvetica Neue', Arial, sans-serif; /* Modern, clean font */
+    background-color: #1a1a1a;
+    color: #e0e0e0;
+    padding: 10px 20px;
+    text-align: left;
+    border-bottom: 1px solid #444;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    font-family: 'Lato', Arial, sans-serif;
 }
 
 .header h1 {
     margin: 0;
-    font-size: 1.5rem; /* Smaller font size for a less prominent header */
-    font-weight: 700; /* Bold font weight for emphasis */
+    font-size: 1.5rem;
+    font-weight: 700;
 }

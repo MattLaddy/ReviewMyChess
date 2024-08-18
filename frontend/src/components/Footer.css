@@ -1,14 +1,23 @@
+/* Header.css */
+
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
+
+
 .footer {
-    background-color: #343a40;
-    color: #ffffff;
+    background-color: #1a1a1a; /* Match header background */
+    color: #e0e0e0; /* Light grey text */
     padding: 1rem;
     text-align: center;
     position: fixed;
     width: 100%;
     bottom: 0;
+    border-top: 1px solid #444; /* Subtle border to mirror header */
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+    font-family: 'Lato', Arial, sans-serif; /* Consistent font with header */
 }
 
 .footer p {
     margin: 0;
     font-size: 0.9rem;
+    color: #b0b0b0; /* Slightly lighter text for contrast */
 }
