@@ -53,16 +53,58 @@ def evaluate_position(fen: str, depth: int):
             "success": False,
             "evaluation": 0.0
         }
+    
 
-def classify_move(swing: float) -> str:
-    if swing <= -2.0:
-        return "blunder"
-    elif -2.0 < swing < -0.5:
-        return "inaccuracy"
-    elif swing >= 2.0:
-        return "missed_win"
+
+def classify_move(swing: float, color: str) -> str:
+    """
+    Classify a move based on its swing value considering the color of the player.
+
+    Parameters:
+        swing (float): The swing value of the move.
+        color (str): The color of the player ('white' or 'black').
+
+    Returns:
+        str: The classification of the move.
+    """
+    if color == 'black':
+        # For Black pieces, a negative swing is good, so invert the thresholds
+        if swing <= -3.0:
+            return "blunder"           # Major mistake; significant disadvantage
+        elif -3.0 < swing <= -1.5:
+            return "mistake"           # Significant error; worse position but not losing material
+        elif -1.5 < swing <= -0.5:
+            return "inaccuracy"        # Minor error; suboptimal move
+        elif 0.5 <= swing < 1.5:
+            return "slightly_accurate" # Small advantage; better position
+        elif 1.5 <= swing < 3.0:
+            return "strong_move"       # Strong move; significantly improves position
+        elif swing >= 3.0:
+            return "brilliant"         # Exceptional move; creates a winning advantage
+        elif swing >= -0.5 and swing <= 0.5:
+            return "normal"            # Neutral move; no significant impact
+        else:
+            return "unclassified"      # For swings outside the defined range
     else:
-        return "normal"
+        # For White pieces, a positive swing is good, so use the original thresholds
+        if swing >= 3.0:
+            return "brilliant"         # Exceptional move; creates a winning advantage
+        elif 1.5 <= swing < 3.0:
+            return "strong_move"       # Strong move; significantly improves position
+        elif 0.5 <= swing < 1.5:
+            return "slightly_accurate" # Small advantage; better position
+        elif -0.5 < swing <= 0.5:
+            return "normal"            # Neutral move; no significant impact
+        elif -1.5 < swing <= -0.5:
+            return "inaccuracy"        # Minor error; suboptimal move
+        elif -3.0 < swing <= -1.5:
+            return "mistake"           # Significant error; worse position but not losing material
+        elif swing <= -3.0:
+            return "blunder"           # Major mistake; significant disadvantage
+        else:
+            return "unclassified"      # For swings outside the defined range
+
+        return "unclassified"      # For swings outside the defined range or unexpected values
 
 def parse_pgn_and_evaluate(pgn_text: str, user_name: str, depth: int):
     logger.info("Parsing PGN and evaluating")
@@ -87,8 +129,10 @@ def parse_pgn_and_evaluate(pgn_text: str, user_name: str, depth: int):
                 current_evaluation = evaluation.get("evaluation", 0.0)
                 swing = current_evaluation - previous_evaluation
 
-                # Determine if the move was made by the user
+                # Determine if the move was made by the user and classify the move
                 move_player = white_player if board.turn == chess.WHITE else black_player
+                color = 'white' if board.turn == chess.WHITE else 'black'
+                
                 if move_player == user_name.strip().lower():
                     evaluations.append({
                         "fen": fen,
@@ -96,7 +140,7 @@ def parse_pgn_and_evaluate(pgn_text: str, user_name: str, depth: int):
                         "previous_evaluation": previous_evaluation,
                         "current_evaluation": current_evaluation,
                         "swing": swing,
-                        "classification": classify_move(swing)
+                        "classification": classify_move(swing, color)  # Pass the color for classification
                     })
 
                 # Update previous_evaluation for the next move
@@ -108,7 +152,6 @@ def parse_pgn_and_evaluate(pgn_text: str, user_name: str, depth: int):
         logger.error(f"Unexpected error during PGN parsing or evaluation: {e}")
 
     return evaluations
-
 
 @app.get("/games/{username}")
 async def get_games(username: str):

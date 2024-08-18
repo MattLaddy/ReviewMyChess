@@ -13,27 +13,21 @@ const GameDetails = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Fetch game data from localStorage or API
         const fetchGameData = async () => {
             setLoading(true);
 
-            // Retrieve stored game data from localStorage
             const storedGame = JSON.parse(localStorage.getItem('gameDetails'));
 
             if (storedGame) {
-                // Use stored game data if available
                 setGame(storedGame);
                 setCurrentFen(storedGame.startingFen);
                 setEvaluations(storedGame.evaluations || []);
             } else if (location.state?.game) {
-                // Fetch new game data from API if not in localStorage
                 try {
                     const gameData = location.state.game;
                     setGame(gameData);
                     setCurrentFen(gameData.startingFen);
                     setEvaluations(gameData.evaluations || []);
-
-                    // Store the new game data in localStorage
                     localStorage.setItem('gameDetails', JSON.stringify(gameData));
                 } catch (error) {
                     console.error('Error fetching game data:', error);
@@ -47,7 +41,7 @@ const GameDetails = () => {
     }, [location.state]);
 
     const handleBackClick = () => {
-        navigate(-1); // Navigate to the previous page
+        navigate(-1);
     };
 
     const handleMoveClick = (fen) => {
@@ -61,6 +55,29 @@ const GameDetails = () => {
     if (loading) return <p>Loading...</p>;
     if (!game) return <p>No game data available</p>;
 
+    const moveIndicatorStyle = (type) => {
+        console.log(type);
+        switch (type) {
+            case 'blunder':
+                return { backgroundColor: '#ee2400', color: '#fff' }; // Deep red for blunders
+            case 'mistake':
+                return { backgroundColor: '#f5c6cb', color: '#721c24' }; // Light red for mistakes
+            case 'inaccuracy':
+                return { backgroundColor: '#f8d7da', color: '#721c24' }; // Lighter red for inaccuracies
+            case 'slightly_accurate':
+                return { backgroundColor: '#d1ecf1', color: '#0c5460' }; // Light blue for slightly accurate moves
+            case 'strong_move':
+                return { backgroundColor: '#d4edda', color: '#155724' }; // Light green for strong moves
+            case 'brilliant':
+                return { backgroundColor: '#c3e6cb', color: '#155724' }; // Lighter green for brilliant moves
+            case 'normal':
+                return { backgroundColor: '#e2e3e5', color: '#6c757d' }; // Light gray for normal moves
+            default:
+                return { backgroundColor: '#e2e3e5', color: '#6c757d' }; // Default color
+        }
+    };
+    
+
     return (
         <div className="game-details-container">
             <button onClick={handleBackClick} className="back-button">Back</button>
@@ -70,6 +87,10 @@ const GameDetails = () => {
                     <ul className="game-evaluations">
                         {evaluations.map((evaluation, index) => (
                             <li key={index} onClick={() => handleMoveClick(evaluation.fen)}>
+                                <span
+                                    className="move-indicator"
+                                    style={moveIndicatorStyle(evaluation.classification)}
+                                />
                                 Move {index + 1}: {evaluation.move}
                             </li>
                         ))}
