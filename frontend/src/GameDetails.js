@@ -25,6 +25,13 @@ const GameDetails = () => {
 
     if (!storedGame) return <p>No game data available</p>;
 
+    // Debugging statements
+    console.log('Stored Game:', storedGame);
+    console.log('Stored Game Evaluations:', storedGame.evaluations);
+
+    // Ensure evaluations is an array
+    const evaluations = Array.isArray(storedGame.evaluations) ? storedGame.evaluations : [];
+
     // Handle the click on a move to update the chessboard with the corresponding FEN
     const handleMoveClick = (fen) => {
         setCurrentFen(fen);
@@ -41,7 +48,7 @@ const GameDetails = () => {
                 <div className="moves-container">
                     <h2>Moves</h2>
                     <ul className="game-evaluations">
-                        {storedGame.evaluations.map((evaluation, index) => (
+                        {evaluations.map((evaluation, index) => (
                             <li key={index} onClick={() => handleMoveClick(evaluation.fen)}>
                                 Move {index + 1}: {evaluation.move}
                             </li>
