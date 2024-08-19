@@ -136,6 +136,8 @@ def parse_pgn_and_evaluate(pgn_text: str, user_name: str, depth: int):
 @app.get("/games/{username}")
 async def get_games(username: str):
     logger.info(f"Fetching games for user: {username}")
+    username = username.lower()
+    
     archives_url = f"https://api.chess.com/pub/player/{username}/games/archives"
     
     async with httpx.AsyncClient() as client:

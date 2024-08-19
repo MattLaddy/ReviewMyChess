@@ -16,7 +16,6 @@ function App() {
                     <Route path="/game/:id" element={<GameDetails />} />
                 </Routes>
             </div>
-            <Footer />
         </Router>
     );
 }
