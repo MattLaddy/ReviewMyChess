@@ -11,6 +11,7 @@ const ChessEvaluator = () => {
     const [currentGame, setCurrentGame] = useState(null);
     const [chess, setChess] = useState(new Chess());
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null); // New state for error handling
     const boardRef = useRef(null);
 
     useEffect(() => {
@@ -33,6 +34,7 @@ const ChessEvaluator = () => {
 
     const fetchGames = async () => {
         setLoading(true);
+        setError(null); // Reset error state before fetching
 
         try {
             const lowercaseUsername = username.toLowerCase();
@@ -44,7 +46,11 @@ const ChessEvaluator = () => {
 
             setGames(fetchedGames);
         } catch (error) {
-            console.error('Error fetching games:', error);
+            if (error.response && error.response.status === 404) {
+                setError('User not found. Maybe you spelled the username wrong?');
+            } else {
+                console.error('Error fetching games:', error);
+            }
         } finally {
             setLoading(false);
         }
@@ -98,7 +104,11 @@ const ChessEvaluator = () => {
 
             {loading ? (
                 <div className="loading-screen">
-                    <p>Loading...</p>
+                    <p>Chess.com user found! Analyzing games...</p>
+                </div>
+            ) : error ? (
+                <div className="error-screen">
+                    <p>Hmmm, we can't seem to find that user. Maybe you spelled it wrong?</p>
                 </div>
             ) : (
                 <div className="games-list">
