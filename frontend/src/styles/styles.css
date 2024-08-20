@@ -53,6 +53,7 @@ body, html {
     height: 450px; /* Adjust height to fit exactly 9 items, assuming each item is around 50px tall */
     overflow-y: auto; /* Make the list scrollable */
     box-sizing: border-box; /* Include padding and border in height calculation */
+    scrollbar-width: none;
 }
 
 .game-evaluations li {
