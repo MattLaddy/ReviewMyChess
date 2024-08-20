@@ -104,12 +104,28 @@ button:hover {
 }
 
 .chess-evaluator {
-  font-family: Arial, sans-serif;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
 }
 
-.username-input, .submit-button {
+.username-input {
+  width: 100%;
+  padding: 10px;
   margin-bottom: 10px;
+  font-size: 16px;
 }
+
+.submit-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+
+
 
 .games-list {
   display: flex;
