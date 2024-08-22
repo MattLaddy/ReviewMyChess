@@ -6,6 +6,7 @@ import './styles/styles.css';
 import Footer from './components/Footer';
 
 const GameDetails = () => {
+    
     const location = useLocation();
     const navigate = useNavigate();
     const [currentFen, setCurrentFen] = useState('');
@@ -27,6 +28,7 @@ const GameDetails = () => {
             navigate('/');
         }
     }, [location.state, navigate]);
+
 
     const handleBackClick = () => {
         navigate(-1);

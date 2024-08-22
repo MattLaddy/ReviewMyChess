@@ -82,14 +82,22 @@ const ChessEvaluator = () => {
         return date.toLocaleDateString();
     };
 
-    const convertTimeControlToMinutes = (timeControl) => {
+    const convertTimeControl = (timeControl) => {
         const [initialTime, increment] = timeControl.split('+');
         const [minutes, seconds] = initialTime.split(':').map(Number);
         const incrementMinutes = parseInt(increment, 10) || 0;
-
+    
         const totalMinutes = minutes + incrementMinutes;
-        return totalMinutes;
+    
+        if (totalMinutes >= 60) {
+            const hours = Math.floor(totalMinutes / 60);
+            const remainingMinutes = totalMinutes % 60;
+            return `${hours}h ${remainingMinutes}m`;
+        } else {
+            return `${totalMinutes}m`;
+        }
     };
+    
 
     return (
         <div className="chess-evaluator">
@@ -125,7 +133,7 @@ const ChessEvaluator = () => {
                                         <p>{game.game.black.username} <strong> - </strong> {game.game.black.rating}</p>
                                     </div>
                                     <p>{formatDate(game.game.end_time)}</p>
-                                    <p>{game.game.time_class} {convertTimeControlToMinutes(game.game.time_control)} minutes</p>
+                                    <p>{game.game.time_class} - {convertTimeControl(game.game.time_control)} </p>
                                     <Link to={`/game/${game.id}`} state={{ game }} className="show-game-button">Show Game</Link>
                                 </div>
                             </div>
